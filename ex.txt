@@ -1,0 +1,21 @@
+# обработка символов у которых два варианта (мягкий и твердый звук).
+    soft_letter = ["ä","ü","i","e"," "] # мягкие гласные
+    hard_letter = ["a","o","u","ı"] # твердые гласные
+    glas = ["k","g","ğ","q"]
+    translate_text_trans = translate_text
+    translate_text_new = ""
+    while translate_text_trans.find("[")!=-1:
+        pos = translate_text_trans.find("[")
+        if not(pos+1 >= len(translate_text_trans)):
+            if translate_text_trans[pos+1] in glas:                            
+                if not (pos+4 >= len(translate_text_trans)):
+                    if not (pos+5>= len(translate_text_trans)):
+                        if translate_text_trans[pos+5] in soft_letter:
+                            translate_text_trans = translate_text_trans[:pos]+translate_text_trans[pos+1]+translate_text_trans[pos+5:] 
+                        elif translate_text_trans[pos+5] in hard_letter:
+                            translate_text_trans = translate_text_trans[:pos]+translate_text_trans[pos+3]+translate_text_trans[pos+5:]
+                    else:
+                        translate_text_trans = translate_text_trans[:pos]+translate_text_trans[pos+1]
+        translate_text_new = translate_text_new + translate_text_trans[:pos+5]
+        translate_text_trans = translate_text_trans[pos+5:]
+    # END обработка символов у которых два варианта (мягкий и твердый звук).

@@ -27,6 +27,13 @@ def get_alifbasi(namefile_cfg):
     return cyrilic_tatar_to_common_turic_alifbasi, common_turic_alifbasi_to_cyrilic_tatar
     # END наполнение словарей перевода одних букв в другие 
 
+def isletter_k_g(sim):
+    glas = ["к","г"]
+    if sim in glas:
+        return True
+    else:
+        return False
+
 # перевод из кирилицы в общетюркский алфавит
 def translate_cyrilic_to_cta(original_text,cyrilic_tatar_to_common_turic_alifbasi):
     """ перевод из кирилицы в общетюркский алфавит
@@ -35,18 +42,76 @@ def translate_cyrilic_to_cta(original_text,cyrilic_tatar_to_common_turic_alifbas
      """
 
     translate_text = "" # перевод текста
-    # TODO: сначала надо отсканировать все сочетания символов которые по два или более символа.
-    # TODO: надо научиться помечать/обрабатывать смволы у которых может быть два варианта.
+    # TODO: сначала надо отсканировать все сочетания символов которые по два или более символа.    
     for i in original_text:  
         try:       
             if i.isupper():
                 sim = i.lower()
-                translate_text+=(cyrilic_tatar_to_common_turic_alifbasi[sim]).upper()
+                if not isletter_k_g(sim):
+                    translate_text+=(cyrilic_tatar_to_common_turic_alifbasi[sim]).upper()
+                else:
+                    translate_text+=i
             else:
-                translate_text+=cyrilic_tatar_to_common_turic_alifbasi[i]
+                if not isletter_k_g(i):
+                    translate_text+=cyrilic_tatar_to_common_turic_alifbasi[i]
+                else:
+                    translate_text+=i
         except KeyError:
             translate_text+=i
-    return translate_text
+
+    print(translate_text)
+
+    # обработка символов у которых два варианта (мягкий и твердый звук).
+    soft_letter = ["ä","ü","i","e"," "] # мягкие гласные
+    hard_letter = ["a","o","u","ı"] # твердые гласные
+    glas = ["к","г"]
+
+    try:
+        translate_text_trans = translate_text
+        translate_text_new=""
+        pos = translate_text_trans.find("к")
+        #print("translate_text_trans = {}  ,pos = {} ".format(translate_text_trans,pos))
+   
+        while pos!=-1:            
+            if translate_text_trans[pos+1] in soft_letter:
+                translate_text_trans = translate_text_trans[:pos]+"k"+translate_text_trans[pos+1:] 
+            else:
+                translate_text_trans = translate_text_trans[:pos]+"q"+translate_text_trans[pos+1:] 
+            translate_text_new += translate_text_trans[:pos+1]
+            translate_text_trans = translate_text_trans[pos+1:]
+            pos = translate_text_trans.find("к")
+            #print("translate_text_trans = {}  ,pos = {} ".format(translate_text_trans,pos))
+    except IndexError:
+        translate_text_new += translate_text_trans[:pos]+"k"
+    else:
+        translate_text_new+=translate_text_trans
+
+    print(translate_text_new)
+
+    try:
+        translate_text_trans = translate_text_new
+        print(translate_text_trans)
+        translate_text_new2=""
+        pos = translate_text_trans.find("г")
+        print("translate_text_trans = {}  ,pos = {} ".format(translate_text_trans,pos))
+   
+        while pos!=-1:            
+            if translate_text_trans[pos+1] in soft_letter:
+                translate_text_trans = translate_text_trans[:pos]+"g"+translate_text_trans[pos+1:] 
+            else:
+                translate_text_trans = translate_text_trans[:pos]+"ğ"+translate_text_trans[pos+1:] 
+            translate_text_new2 += translate_text_trans[:pos+1]
+            translate_text_trans = translate_text_trans[pos+1:]
+            pos = translate_text_trans.find("г")
+            print("translate_text_trans = {}  ,pos = {} ".format(translate_text_trans,pos))
+    except IndexError:
+        translate_text_new2 += translate_text_trans[:pos]+"g"
+    else:
+        translate_text_new2+=translate_text_trans
+    # END обработка символов у которых два варианта (мягкий и твердый звук).
+    
+    
+    return translate_text_new2
 # END перевод из кирилицы в общетюркский алфавит
 
 
@@ -86,16 +151,17 @@ def translate_cta_to_cyrilic(original_text,cta_to_cyr_tat):
 # END перевод из общетюркского алфавита в кирилицу татарский
 
 #     
-# original_text = "әйбЕт"
-#original_text = "Казань"
-original_text = "Татар телен укытудан баш тартмаган Шмаков мәхкәмәдә прокуратура ялганын"
-print(original_text)
+
 cyr2cta, cta2cyr = get_alifbasi(namefile_cfg)
 
+original_text = "Соңгы елларда себертатар теле белән гомумтатар әдәби телнең уртаклыгы телгә дә алынмаганлыктан, соңгы айларда Татарстан мәктәпләреннән ана телен кысрыклап чыгаруга бәйле вазгыять себертатарларның татар дөньясыннан аерылып чыгуын тәэмин итә, дигән уйны ныгытып өлгергән иде инде. Бәлки, нәкъ менә шушы вазгыять Төмәннең күренекле себертатар активистларын урыслашу ассимиляциясенә каршылык йөзеннән әдәби телгә йөз белән борылырга этәргәндер дә.Соңгы елларда себертатар теле белән гомумтатар әдәби телнең уртаклыгы телгә дә алынмаганлыктан, соңгы айларда Татарстан мәктәпләреннән ана телен кысрыклап чыгаруга бәйле вазгыять себертатарларның татар дөньясыннан аерылып чыгуын тәэмин итә, дигән уйны ныгытып өлгергән иде инде. Бәлки, нәкъ менә шушы вазгыять Төмәннең күренекле себертатар активистларын урыслашу ассимиляциясенә каршылык йөзеннән әдәби телгә йөз белән борылырга этәргәндер дә."
+
+original_text2 = "гомумтатар казан к кызык."
+print(original_text2)
 text = translate_cyrilic_to_cta(original_text,cyr2cta)
 print(text)
 
-org_text2 = "Tatar imlasın kamilläşterügä zur öleş kertkän ğälimnär arasında Äxmäthadi Maqsudiğa (1864-1941) ayırım tuqtalıp ütärgä bula. Äxmäthadi Maqsudinıñ 1892. yılda berençe tapqır dönya kürgän «Möğällime äwwäl» isemle älifbası ayıruça zur uñış qazana. Kitapnıñ utızdan artıq basması bar, ğömümi bastıru 1,200,000 danädän artıp kitä. ä.Maqsudinıñ bu älifbası buyınça Tatarlar ğına tügel, Üzbäklär, Qazaqlar, Qırğızlar, Qırım Tatarları häm başqa Törki xalıqlar da uqu-yazu nigezlären üzläştergännär."
-text2 =translate_cta_to_cyrilic(org_text2,cta2cyr)
-print(text2)
+# org_text2 = "Tatar imlasın kamilläşterügä zur öleş kertkän ğälimnär arasında Äxmäthadi Maqsudiğa (1864-1941) ayırım tuqtalıp ütärgä bula. Äxmäthadi Maqsudinıñ 1892. yılda berençe tapqır dönya kürgän «Möğällime äwwäl» isemle älifbası ayıruça zur uñış qazana. Kitapnıñ utızdan artıq basması bar, ğömümi bastıru 1,200,000 danädän artıp kitä. ä.Maqsudinıñ bu älifbası buyınça Tatarlar ğına tügel, Üzbäklär, Qazaqlar, Qırğızlar, Qırım Tatarları häm başqa Törki xalıqlar da uqu-yazu nigezlären üzläştergännär."
+# text2 =translate_cta_to_cyrilic(org_text2,cta2cyr)
+# print(text2)
 
