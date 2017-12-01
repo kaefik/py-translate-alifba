@@ -17,11 +17,11 @@ def get_alifbasi(namefile_cfg):
         turk = l[0]
         cyrilic = l[1]
         if turk in common_turic_alifbasi_to_cyrilic_tatar:
-            common_turic_alifbasi_to_cyrilic_tatar[turk]=common_turic_alifbasi_to_cyrilic_tatar[turk]+"*"+cyrilic
+            common_turic_alifbasi_to_cyrilic_tatar[turk]="[{0}*{1}]".format(common_turic_alifbasi_to_cyrilic_tatar[turk],cyrilic)
         else:
             common_turic_alifbasi_to_cyrilic_tatar[turk]=cyrilic
         if cyrilic in cyrilic_tatar_to_common_turic_alifbasi:
-            cyrilic_tatar_to_common_turic_alifbasi[cyrilic]=cyrilic_tatar_to_common_turic_alifbasi[cyrilic]+"*"+turk
+            cyrilic_tatar_to_common_turic_alifbasi[cyrilic]="[{0}*{1}]".format(cyrilic_tatar_to_common_turic_alifbasi[cyrilic],turk)
         else:
             cyrilic_tatar_to_common_turic_alifbasi[cyrilic]=turk
     return cyrilic_tatar_to_common_turic_alifbasi, common_turic_alifbasi_to_cyrilic_tatar
@@ -95,7 +95,7 @@ cyr2cta, cta2cyr = get_alifbasi(namefile_cfg)
 text = translate_cyrilic_to_cta(original_text,cyr2cta)
 print(text)
 
-org_text2 = "900 yıllarnıñ başında qullanuğa Ğäräp älifbasına nigezlängän älifba kerä. Ozaq waqıtlar Ğäräp yazuı Tatarlar tarafınnan bernindi üzgärtüsez genä qullanılıp kilä. Farsılar, üz telläreneñ ixtıyaclarınnan çığıp, Ğäräp älifbasına dürt xäref östilär (p, ç, j, g). äkrenläp bu xäreflärne Urta Aziä Törkiläre dä üzläşterä, soñraq alarnı Tatarlar da qabul itälär, älifbalar tarixında ul «İske imlä» yä isä «İske älif» iseme belän yörtelä. Läkin ul äle Tatar telenä, anıñ qanunnarına tulısınça cawap birä torğan älifba bulmıy. Mäsälän, Tatar telendäge «g» İske imlä älifbasında Ğäräp teleneñ «k», Tatarnıñ «ç» Ğäräpneñ «c», häm «p» urınında «b», «ñ» Ğäräpneñ iske “nk” xärefläre arqılı belderelgän. Borınğı Tatar qulyazmalarında başqa xäreflär yärdämendä belderü oçraqları da bar."
+org_text2 = "Tatar imlasın kamilläşterügä zur öleş kertkän ğälimnär arasında Äxmäthadi Maqsudiğa (1864-1941) ayırım tuqtalıp ütärgä bula. Äxmäthadi Maqsudinıñ 1892. yılda berençe tapqır dönya kürgän «Möğällime äwwäl» isemle älifbası ayıruça zur uñış qazana. Kitapnıñ utızdan artıq basması bar, ğömümi bastıru 1,200,000 danädän artıp kitä. ä.Maqsudinıñ bu älifbası buyınça Tatarlar ğına tügel, Üzbäklär, Qazaqlar, Qırğızlar, Qırım Tatarları häm başqa Törki xalıqlar da uqu-yazu nigezlären üzläştergännär."
 text2 =translate_cta_to_cyrilic(org_text2,cta2cyr)
 print(text2)
 
