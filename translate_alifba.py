@@ -59,59 +59,42 @@ def translate_cyrilic_to_cta(original_text,cyrilic_tatar_to_common_turic_alifbas
         except KeyError:
             translate_text+=i
 
-    print(translate_text)
+    # print(translate_text)
 
     # обработка символов у которых два варианта (мягкий и твердый звук).
     soft_letter = ["ä","ü","i","e"," "] # мягкие гласные
     hard_letter = ["a","o","u","ı"] # твердые гласные
     glas = ["к","г"]
 
-    try:
-        translate_text_trans = translate_text
-        translate_text_new=""
-        pos = translate_text_trans.find("к")
-        #print("translate_text_trans = {}  ,pos = {} ".format(translate_text_trans,pos))
-   
+    try:        
+        pos = translate_text.find("к")
+           
         while pos!=-1:            
-            if translate_text_trans[pos+1] in soft_letter:
-                translate_text_trans = translate_text_trans[:pos]+"k"+translate_text_trans[pos+1:] 
+            if translate_text[pos+1] in hard_letter:
+                translate_text = translate_text[:pos]+"q"+translate_text[pos+1:] 
             else:
-                translate_text_trans = translate_text_trans[:pos]+"q"+translate_text_trans[pos+1:] 
-            translate_text_new += translate_text_trans[:pos+1]
-            translate_text_trans = translate_text_trans[pos+1:]
-            pos = translate_text_trans.find("к")
-            #print("translate_text_trans = {}  ,pos = {} ".format(translate_text_trans,pos))
+                translate_text = translate_text[:pos]+"k"+translate_text[pos+1:] 
+            pos = translate_text.find("к")
     except IndexError:
-        translate_text_new += translate_text_trans[:pos]+"k"
-    else:
-        translate_text_new+=translate_text_trans
+        translate_text = translate_text[:pos]+"k"
 
-    print(translate_text_new)
-
-    try:
-        translate_text_trans = translate_text_new
-        print(translate_text_trans)
-        translate_text_new2=""
-        pos = translate_text_trans.find("г")
-        print("translate_text_trans = {}  ,pos = {} ".format(translate_text_trans,pos))
-   
+    try:       
+        pos = translate_text.find("г")
+           
         while pos!=-1:            
-            if translate_text_trans[pos+1] in soft_letter:
-                translate_text_trans = translate_text_trans[:pos]+"g"+translate_text_trans[pos+1:] 
+            if translate_text[pos+1] in hard_letter:
+                translate_text = translate_text[:pos]+"ğ"+translate_text[pos+1:] 
             else:
-                translate_text_trans = translate_text_trans[:pos]+"ğ"+translate_text_trans[pos+1:] 
-            translate_text_new2 += translate_text_trans[:pos+1]
-            translate_text_trans = translate_text_trans[pos+1:]
-            pos = translate_text_trans.find("г")
-            print("translate_text_trans = {}  ,pos = {} ".format(translate_text_trans,pos))
+                translate_text = translate_text[:pos]+"g"+translate_text[pos+1:] 
+            pos = translate_text.find("г")
     except IndexError:
-        translate_text_new2 += translate_text_trans[:pos]+"g"
-    else:
-        translate_text_new2+=translate_text_trans
+        translate_text = translate_text[:pos]+"g"
+
+
     # END обработка символов у которых два варианта (мягкий и твердый звук).
     
     
-    return translate_text_new2
+    return translate_text
 # END перевод из кирилицы в общетюркский алфавит
 
 
@@ -156,7 +139,7 @@ cyr2cta, cta2cyr = get_alifbasi(namefile_cfg)
 
 original_text = "Соңгы елларда себертатар теле белән гомумтатар әдәби телнең уртаклыгы телгә дә алынмаганлыктан, соңгы айларда Татарстан мәктәпләреннән ана телен кысрыклап чыгаруга бәйле вазгыять себертатарларның татар дөньясыннан аерылып чыгуын тәэмин итә, дигән уйны ныгытып өлгергән иде инде. Бәлки, нәкъ менә шушы вазгыять Төмәннең күренекле себертатар активистларын урыслашу ассимиляциясенә каршылык йөзеннән әдәби телгә йөз белән борылырга этәргәндер дә.Соңгы елларда себертатар теле белән гомумтатар әдәби телнең уртаклыгы телгә дә алынмаганлыктан, соңгы айларда Татарстан мәктәпләреннән ана телен кысрыклап чыгаруга бәйле вазгыять себертатарларның татар дөньясыннан аерылып чыгуын тәэмин итә, дигән уйны ныгытып өлгергән иде инде. Бәлки, нәкъ менә шушы вазгыять Төмәннең күренекле себертатар активистларын урыслашу ассимиляциясенә каршылык йөзеннән әдәби телгә йөз белән борылырга этәргәндер дә."
 
-original_text2 = "гомумтатар казан к кызык."
+original_text2 = "гомумтатар казан к кызык.г"
 print(original_text2)
 text = translate_cyrilic_to_cta(original_text,cyr2cta)
 print(text)
